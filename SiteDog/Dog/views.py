@@ -26,7 +26,7 @@ def index(request):
     return render(request, 'Dog/index.html', context=date)
 
 def about(request):
-    return render(request, 'Dog/about.html', {'title' : 'О сайте'})
+    return render(request, 'Dog/about.html', {'title': 'О сайте', 'menu': menu})
 
 def show_post(request, post_id):
     return HttpResponse(f'Отображение статьи с id {post_id}')
