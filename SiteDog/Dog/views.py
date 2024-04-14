@@ -9,6 +9,12 @@ menu = [{'title': 'О сайте', 'url_name': 'about'},
         {'title': 'Войти', 'url_name': 'login'},
 ]
 
+cats_db = [
+    {'id': 1, 'name': 'Маленькие'},
+    {'id': 2, 'name': 'Средние'},
+    {'id': 3, 'name': 'Большие'}
+]
+
 data_db = [
     {'id': 1, 'title': 'Порода пастушьих собак: Корги', 'content': 'Описание породы', 'is_published': True},
     {'id': 2, 'title': 'Джек-рассел-терьер', 'content': 'Описание породы', 'is_published': False},
@@ -22,6 +28,7 @@ def index(request):
         'title': 'Главная страница',
         'menu': menu,
         'posts': data_db,
+        'cat_selectad': 0,
     }
     return render(request, 'Dog/index.html', context=date)
 
@@ -40,6 +47,14 @@ def addpage(request):
 def contact(request):
     return HttpResponse('Обратная связь')
 
+def show_category(request, cat_id):
+    date = {
+        'title': 'Главная страница',
+        'menu': menu,
+        'posts': data_db,
+        'cat_selectad': cat_id,
+    }
+    return index(request)
 
 
 def page_not_found(request, exception):

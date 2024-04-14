@@ -21,7 +21,8 @@ from Dog.views import page_not_found
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('Dog.urls')),
+    # path('', include('Dog.urls', namespace="users")),
+    path('users/', include('users.urls')),
 ]
 
 handler404 = page_not_found
