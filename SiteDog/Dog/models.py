@@ -1,5 +1,5 @@
 from django.db import models
-from django import forms
+
 class Dog(models.Model):
     title = models.CharField(max_length=255)
     content = models.TextField(blank=True)
