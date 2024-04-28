@@ -3,9 +3,9 @@ import Dog.views as views
 
 register = template.Library()
 
-
-# def get_menu():
-#     return views.menu
+@register.simple_tag
+def get_menu():
+    return views.menu
 @register.simple_tag()
 def get_categories():
     return views.cats_db
