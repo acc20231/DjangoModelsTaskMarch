@@ -17,7 +17,7 @@ class Dog(models.Model):
     is_published = models.BooleanField(choices=Status.choices, default=Status.DRAFT)
     objects = models.Manager()
     published = PublishedManager()
-    cat = models.ForeignKey('Category', on_delete=models.PROTECT, null=True)
+    cat = models.ForeignKey('Category', on_delete=models.PROTECT)
 
     def __str__(self):
         return self.title
