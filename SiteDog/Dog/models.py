@@ -1,7 +1,8 @@
+
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.urls import reverse
-from django.utils.text import slugify
+
 
 def translit_to_eng(s: str) -> str:
     d = {'а': 'a', 'б': 'b', 'в': 'v', 'г': 'g', 'д': 'd',
@@ -13,13 +14,9 @@ def translit_to_eng(s: str) -> str:
     return "".join(map(lambda x: d[x] if d.get(x, False) else x, s.lower()))
 
 
-
 class PublishedManager(models.Manager):
     def get_queryset(self):
         return super().get_queryset().filter(is_published=Dog.Status.PUBLISHED)
-
-
-
 
 
 class Dog(models.Model):
@@ -55,6 +52,7 @@ class Dog(models.Model):
 
     def get_absolute_url(self):
         return reverse('post', kwargs={'post_slug': self.slug})
+
 
 class Category(models.Model):
     name = models.CharField(max_length=100, db_index=True, verbose_name='Категории')

@@ -1,4 +1,5 @@
 from django.contrib import admin, messages
+
 from .models import Dog, Category
 
 
@@ -6,7 +7,7 @@ from .models import Dog, Category
 class DogAdmin(admin.ModelAdmin):
     fields = ['title', 'slug', 'content', 'cat']
     # readonly_fields = ['slug']
-    prepopulated_fields = {'slug':('title', )}
+    prepopulated_fields = {'slug': ('title',)}
     list_display = ('title', 'time_create', 'is_published', 'cat', 'brief_info',)
     list_display_links = ('title',)
     ordering = ['time_create', 'title']
@@ -22,20 +23,18 @@ class DogAdmin(admin.ModelAdmin):
 
     @admin.action(description="Опубликовать выбранные записи")
     def set_published(self, request, queryset):
-         count = queryset.update(is_published=Dog.Status.PUBLISHED)
-         self.message_user(request, f"Изменено {count} записей.")
+        count = queryset.update(is_published=Dog.Status.PUBLISHED)
+        self.message_user(request, f"Изменено {count} записей.")
 
     @admin.action(description="Снять с публикации выбранные записи")
     def set_draft(self, request, queryset):
         count = queryset.update(is_published=Dog.Status.DRAFT)
         self.message_user(request, f"{count} записей сняты с публикации!", messages.WARNING)
+
+
 # #
 # #
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ('id', 'name')
     list_display_links = ('id', 'name')
-
-
-
-
