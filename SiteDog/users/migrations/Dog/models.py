@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from django.db import models
 from django.urls import reverse
 from django.utils.text import slugify
@@ -17,6 +18,10 @@ class PublishedManager(models.Manager):
     def get_queryset(self):
         return super().get_queryset().filter(is_published=Dog.Status.PUBLISHED)
 
+
+
+
+
 class Dog(models.Model):
     class Status(models.IntegerChoices):
         DRAFT = 0, 'Черновик'
@@ -33,6 +38,9 @@ class Dog(models.Model):
     published = PublishedManager()
     cat = models.ForeignKey('Category', on_delete=models.PROTECT, verbose_name='Порода')
 
+    author = models.ForeignKey(get_user_model(), on_delete=models.SET_NULL,
+                               related_name='posts', null=True, default=None)
+
     def __str__(self):
         return self.title
 
@@ -47,10 +55,6 @@ class Dog(models.Model):
 
     def get_absolute_url(self):
         return reverse('post', kwargs={'post_slug': self.slug})
-
-    # def save(self, *args, **kwargs):
-    #     self.slug = slugify(translit_to_eng(self.title))
-    #     super().save(*args, **kwargs)
 
 class Category(models.Model):
     name = models.CharField(max_length=100, db_index=True, verbose_name='Категории')

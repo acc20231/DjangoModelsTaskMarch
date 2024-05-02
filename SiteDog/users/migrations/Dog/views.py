@@ -1,14 +1,18 @@
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
 from django.http import HttpResponse, HttpResponseNotFound, Http404, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.template.loader import render_to_string
+from django.views.generic import CreateView
 
+# from .forms import AddPostForm
 from .models import Dog
 
 menu = [{'title': 'О сайте', 'url_name': 'about'},
         {'title': 'Добавить статью', 'url_name': 'add_page'},
         {'title': 'Обратная связь', 'url_name': 'contact'},
-        {'title': 'Войти', 'url_name': 'login'},
+
 ]
 
 cats_db = [
@@ -27,7 +31,7 @@ def index(request):
         'cat_selectad': 0,
     }
     return render(request, 'Dog/index.html', context=date)
-
+@login_required
 def about(request):
     return render(request, 'Dog/about.html', {'title': 'О сайте', 'menu': menu})
 
@@ -45,10 +49,10 @@ def show_post(request, post_slug):
 
 def login(request):
     return HttpResponse('Авторизация')
-
+@login_required
 def addpage(request):
     return HttpResponse('Добавление статьи')
-
+@login_required
 def contact(request):
     return HttpResponse('Обратная связь')
 
@@ -60,6 +64,18 @@ def show_category(request, cat_id):
         'cat_selectad': cat_id,
     }
     return index(request)
+
+
+class AddPage(PermissionRequiredMixin, LoginRequiredMixin,  CreateView):
+    # form_class = AddPostForm
+    # template_name = 'Dog/addpage.html'
+    # title_page = 'Добавление статьи'
+    # permission_required = 'dog.add_women' # <приложение>.<действие>_<таблица>
+
+    def form_valid(self, form):
+        w = form.save(commit=False)
+        w.author = self.request.user
+        return super().form_valid(form)
 
 
 def page_not_found(request, exception):

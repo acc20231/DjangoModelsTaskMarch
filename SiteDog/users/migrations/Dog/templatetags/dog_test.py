@@ -1,5 +1,5 @@
 from django import template
-import Dog.views as views
+from users.migrations import Dog as views
 
 register = template.Library()
 
