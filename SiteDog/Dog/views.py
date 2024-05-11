@@ -1,8 +1,9 @@
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
 from django.http import HttpResponse, HttpResponseNotFound
 from django.shortcuts import render, get_object_or_404
-from django.views.generic import CreateView
+from django.urls import reverse_lazy
+from django.views.generic import CreateView, UpdateView
 
 # from .forms import AddPostForm
 from .models import Dog
@@ -77,13 +78,21 @@ class AddPage(PermissionRequiredMixin, LoginRequiredMixin, CreateView):
     # form_class = AddPostForm
     # template_name = 'Dog/addpage.html'
     # title_page = 'Добавление статьи'
-    # permission_required = 'dog.add_women' # <приложение>.<действие>_<таблица>
+    permission_required = 'dog.add_women' # <приложение>.<действие>_<таблица>
 
     def form_valid(self, form):
         w = form.save(commit=False)
         w.author = self.request.user
         return super().form_valid(form)
 
+class UpdatePage(PermissionRequiredMixin, UpdateView):
+    model = Dog
+    fields = ['title', 'content', 'photo', 'is_published', 'cat']
+    template_name = 'dog/addpage.html'
+    success_url = reverse_lazy('home')
+    title_page = 'Редактирование статьи'
+    permission_required = 'dog.change_dog'
 
+@permission_required(perm='dog.add_women', raise_exception=True)
 def page_not_found(request, exception):
     return HttpResponseNotFound('<h1>Страница не найдена</h1>')
